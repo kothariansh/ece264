@@ -13,26 +13,27 @@ Node* create_node(int v) {
     return n;
 }
 
-// Recursive helper to filter and print deleted nodes
-Node* filter(Node* head, int* sum_so_far) {
+// Actual recursive logic using sum_so_far
+Node* filter_helper(Node* head, int* sum_so_far) {
     if (head == NULL) return NULL;
 
-    Node* new_next = filter(head->next, sum_so_far);
+    Node* new_next = filter_helper(head->next, sum_so_far);
 
     if (head->value < *sum_so_far) {
         printf("Deleted: %d\n", head->value);
         free(head);
         return new_next;
     } else {
-        *sum_so_far += head->value;  // Only add kept values
+        *sum_so_far += head->value;
         head->next = new_next;
         return head;
     }
 }
 
-Node* process(Node* head) {
+// Public function taking only head
+Node* filter(Node* head) {
     int sum = 0;
-    return filter(head, &sum);
+    return filter_helper(head, &sum);
 }
 
 void print_list(Node* head) {
@@ -44,19 +45,17 @@ void print_list(Node* head) {
 }
 
 int main() {
-    // Input: 15 -> 2 -> 3 -> 1 -> 1 -> 2 -> 5 -> 7
     Node* head = create_node(4);
     head->next = create_node(2);
     head->next->next = create_node(3);
     head->next->next->next = create_node(1);
     head->next->next->next->next = create_node(3);
-    
 
     printf("Original: ");
     print_list(head);
 
     printf("\nDeleted Nodes:\n");
-    head = process(head);
+    head = filter(head);
 
     printf("\nFiltered: ");
     print_list(head);
