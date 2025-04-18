@@ -40,6 +40,32 @@ Node * List_destroy(Node * h)
         h = p;
     }
 }
+// delete any element that == v
+Node * List_delete(Node * h, int v)
+{
+    if (h == NULL) return NULL;
+
+    if (h->value == v)
+    {
+        Node * temp = h->next;
+        free(h);
+        return temp;
+    }
+
+    Node * p = h;
+    while (p->next != NULL && p->next->value != v)
+        p = p->next;
+
+    if (p->next != NULL)
+    {
+        Node * to_delete = p->next;
+        p->next = to_delete->next;
+        free(to_delete);
+    }
+
+    return h;
+}
+
 
 Node * List_delete(Node * h, int v)
 {
